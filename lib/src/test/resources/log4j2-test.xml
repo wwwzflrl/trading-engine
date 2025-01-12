@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Configuration status="WARN">
+    <Appenders>
+        <Console name="StdOut" target="SYSTEM_OUT">
+            <PatternLayout pattern="%d{yyyy-MM-dd_HH:mm:ss.SSS} %c{1.} [%t] %notEmpty{%marker }%-5level - %msg%n"/>
+        </Console>
+    </Appenders>
+    <Loggers>
+        <Root level="DEBUG">
+            <AppenderRef ref="StdOut"/>
+        </Root>
+    </Loggers>
+</Configuration>

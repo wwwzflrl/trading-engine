@@ -5,7 +5,7 @@ package app.trading.engine.core.api;
  * 1. task is overdue
  * 2. No normal did any workding during this duty cycle
  */
-public interface HouseKeeper {
+public interface HouseKeeper extends DutyCycleTask {
     long maxIntervalNs();
     boolean done();
 }

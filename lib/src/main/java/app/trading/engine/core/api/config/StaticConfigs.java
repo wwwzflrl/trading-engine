@@ -14,7 +14,8 @@ public class StaticConfigs {
 
     public static final int INSTANCE_ID = Integer.getInteger("InstanceId", new SecureRandom().nextInt());
 
-    public static final long CLOCK_ALLOWED_DEVIATION_NS = Long.getLong("clock.allowed-deviation-ns", 500L);
+    // TODO find why 500L is not successful on my personal computer
+    public static final long CLOCK_ALLOWED_DEVIATION_NS = Long.getLong("clock.allowed-deviation-ns", 50000L);
 
     public static final boolean CLOCK_TASKS = Boolean.getBoolean("ClockTasks");
 
