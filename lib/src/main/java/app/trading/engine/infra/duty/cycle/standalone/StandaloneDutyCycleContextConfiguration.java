@@ -22,7 +22,8 @@ import java.util.concurrent.ThreadFactory;
  * Start Order:
  *  MainDutyCycleStarter --> TaskExecutor.execute (bind cpu)
 *                             --> DutyCycleRunnable (idle execute Impl)
- *                              --> DutyCycleImpl (excute PartOfMainDutyCycle + houseKeeper)
+ *                              --> DutyCycleImpl (execute PartOfMainDutyCycle
+ *                                  ---> MainTasks or houseKeeper
  */
 @Configuration
 @Import({ DutyCycleThreadFactoryContextConfiguration.class})

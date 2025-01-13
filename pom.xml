@@ -26,6 +26,7 @@
         <junit.platform.version>1.10.1</junit.platform.version>
         <affinity.version>3.23.3</affinity.version>
         <awaitility.version>4.2.0</awaitility.version>
+        <aeron.version>1.44.0</aeron.version>
     </properties>
 
     <dependencies>
@@ -95,6 +96,11 @@
                 <artifactId>awaitility</artifactId>
                 <version>${awaitility.version}</version>
                 <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>io.aeron</groupId>
+                <artifactId>aeron-client</artifactId>
+                <version>${aeron.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

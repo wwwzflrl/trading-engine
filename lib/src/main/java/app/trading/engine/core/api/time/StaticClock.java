@@ -10,7 +10,8 @@ import java.util.concurrent.locks.LockSupport;
 import static app.trading.engine.core.api.config.StaticConfigs.CLOCK_ALLOWED_DEVIATION_NS;
 import static java.lang.System.nanoTime;
 
-public class StaticClock implements Clock {
+class StaticClock implements Clock {
+
     private static final Logger log = LogManager.getLogger(StaticClock.class);
 
     static final Clock INSTANCE = new StaticClock();
@@ -37,6 +38,7 @@ public class StaticClock implements Clock {
         long derivedEpochNs;
         int success;
         long offset;
+
         long findOffset() {
             log.info("Aligning clock...");
             while (success++ < 10) {
@@ -50,29 +52,35 @@ public class StaticClock implements Clock {
             nsFromSteadyClock = nanoTime();
             nsFromHighResClock = getEpochNsFromSystemHighResClock();
             derivedEpochNs = nsFromSteadyClock + offset;
-            if (offsetBreachedLowerBond() || offsetBreachedUpperBond()) {
+            if (offsetBreachedLowerBound() || offsetBreachedUpperBound()) {
                 success = 0;
             }
         }
 
-        boolean offsetBreachedLowerBond() {
+        boolean offsetBreachedLowerBound() {
             final long lowerBound = nsFromHighResClock - CLOCK_ALLOWED_DEVIATION_NS;
             if (derivedEpochNs > lowerBound) {
                 offset = proposedNewOffset();
+                log.info("FALSE LOWER offset: {}", offset);
                 return false;
+            } else {
+                offset = Math.max(lowerBound - nsFromSteadyClock, proposedNewOffset());
+                log.info("TRUE LOWER offset: {}", offset);
+                return true;
             }
-            offset = Math.max(lowerBound - nsFromSteadyClock, proposedNewOffset());
-            return true;
         }
 
-        boolean offsetBreachedUpperBond() {
+        boolean offsetBreachedUpperBound() {
             final long upperBound = nsFromHighResClock + CLOCK_ALLOWED_DEVIATION_NS;
-            if (upperBound > derivedEpochNs) {
+            if (derivedEpochNs < upperBound) {
                 offset = proposedNewOffset();
+                log.info("FALSE Upper offset: {}", offset);
                 return false;
+            } else {
+                offset = Math.min(upperBound - nsFromSteadyClock, proposedNewOffset());
+                log.info("FALSE Upper offset: {}", offset);
+                return true;
             }
-            offset = Math.min(upperBound - nsFromSteadyClock, proposedNewOffset());
-            return true;
         }
 
         long proposedNewOffset() {
@@ -83,5 +91,6 @@ public class StaticClock implements Clock {
             final Instant now = Instant.now();
             return now.getEpochSecond() * 1_000_000_000L + now.getNano();
         }
+
     }
 }
